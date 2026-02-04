@@ -3,84 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 文献笔记</title>
+    <title>📚 AI/LLM 文献资料库</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e4e4e4;
+            background: #f5f5f7;
+            color: #1d1d1f;
             min-height: 100vh;
-            padding: 20px;
         }
-        .container { max-width: 900px; margin: 0 auto; }
-        h1 { color: #00d9ff; margin-bottom: 20px; font-size: 1.8em; }
-        .card {
-            background: rgba(255,255,255,0.05);
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 { font-size: 2em; margin-bottom: 10px; }
+        header p { opacity: 0.8; margin-bottom: 20px; }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        .search-box button {
+            padding: 12px 25px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .filters {
+            padding: 20px;
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .filter-tag {
+            padding: 8px 16px;
+            background: #f5f5f7;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .filter-tag:hover, .filter-tag.active {
+            background: #007aff;
+            color: white;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .paper-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+        }
+        .paper-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        
+        .paper-type {
+            display: inline-block;
+            padding: 4px 12px;
             border-radius: 12px;
-            padding: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .type-paper { background: #e8f5e9; color: #2e7d32; }
+        .type-blog { background: #e3f2fd; color: #1565c0; }
+        .type-resource { background: #fff3e0; color: #ef6c00; }
+        
+        .paper-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .paper-title a {
+            color: #1d1d1f;
+            text-decoration: none;
+        }
+        .paper-title a:hover { color: #007aff; }
+        
+        .paper-meta {
+            font-size: 13px;
+            color: #86868b;
+            margin-bottom: 12px;
+        }
+        
+        .paper-desc {
+            font-size: 14px;
+            color: #515154;
+            line-height: 1.6;
             margin-bottom: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
         }
-        .card h2 { color: #00d9ff; margin-bottom: 12px; font-size: 1.2em; }
-        .card h3 { color: #7fdbca; margin: 16px 0 8px; font-size: 1em; }
-        .card a { color: #00d9ff; text-decoration: none; }
-        .card a:hover { text-decoration: underline; }
-        ul { margin-left: 20px; }
-        li { margin: 6px 0; line-height: 1.6; }
-        .meta { color: #888; font-size: 0.9em; margin-bottom: 12px; }
-        .tag { 
-            background: rgba(0,217,255,0.2); 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            font-size: 0.8em;
-            margin-right: 8px;
+        
+        .paper-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        .divider { border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0; }
+        .tag {
+            padding: 4px 10px;
+            background: #f5f5f7;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #515154;
+        }
+        
+        .stats {
+            text-align: center;
+            padding: 20px;
+            color: #86868b;
+        }
+        
+        @media (max-width: 768px) {
+            .papers-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 1.5em; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📚 文献笔记</h1>
-        <p class="meta">最后更新: <span id="last-update"></span></p>
-        
-        <div class="card">
-            <h2>📚 Anthropic Agent 技术文献</h2>
-            <p class="meta">2026-02-04</p>
-            
-            <h3>一、Claude Agent SDK 官方资源</h3>
-            <ul>
-                <li>
-                    🔗 <a href="https://github.com/anthropics/claude-cookbooks" target="_blank">Claude Cookbooks</a>
-                    <br><small style="color:#888">Anthropic 官方维护的代码示例库</small>
-                </li>
-                <li>
-                    🔗 <a href="https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use" target="_blank">Tool Use 指南</a>
-                    <br><small style="color:#888">讲解如何让 Claude 与外部工具集成</small>
-                </li>
-            </ul>
-            
-            <h3>二、Anthropic 官方博客 (2025年)</h3>
-            <ul>
-                <li>• Claude Opus 4.5 (2025-11): 世界上最好的编码/Agent/计算机使用模型</li>
-                <li>• Claude Sonnet 4.5 + Agent SDK (2025-09): 刷新编码/推理基准记录</li>
-                <li>• 融资消息 (2025-09): 130亿美元，估值 1830亿美元</li>
-            </ul>
+    <header>
+        <h1>📚 AI/LLM 文献资料库</h1>
+        <p>论文 • 博客 • 技术资源</p>
+        <div class="search-box">
+            <input type="text" id="search" placeholder="🔍 搜索标题、标签、描述...">
+            <button onclick="filter()">搜索</button>
         </div>
-        
-        <div class="card">
-            <h2>🔗 资源汇总</h2>
-            <ul>
-                <li><span class="tag">官方</span> <a href="https://www.anthropic.com/blog" target="_blank">Anthropic 官方博客</a></li>
-                <li><span class="tag">代码</span> <a href="https://github.com/anthropics/claude-cookbooks" target="_blank">Claude Cookbooks</a></li>
-                <li><span class="tag">文档</span> <a href="https://docs.claude.com" target="_blank">Claude API 文档</a></li>
-                <li><span class="tag">社区</span> <a href="https://www.anthropic.com/discord" target="_blank">Anthropic Discord</a></li>
-            </ul>
-        </div>
+    </header>
+    
+    <div class="filters" id="filters">
+        <span class="filter-tag active" onclick="filter('all')">全部</span>
+        <span class="filter-tag" onclick="filter('paper')">📄 论文</span>
+        <span class="filter-tag" onclick="filter('blog')">📝 博客</span>
+        <span class="filter-tag" onclick="filter('resource')">🔧 资源</span>
     </div>
     
+    <div class="container">
+        <div class="stats" id="stats"></div>
+        <div class="papers-grid" id="grid"></div>
+    </div>
+
     <script>
-        document.getElementById('last-update').textContent = new Date().toLocaleString('zh-CN');
+        const papers = [
+            {
+                id: 1,
+                type: 'blog',
+                title: 'Building Effective Agents',
+                url: 'https://www.anthropic.com/blog/building-effective-agents',
+                date: '2025-12',
+                author: 'Anthropic',
+                desc: 'Anthropic 官方博客，讨论如何构建有效的 AI Agent，包括常见模式、工具使用和最佳实践。',
+                tags: ['Agent', 'Anthropic', '最佳实践']
+            },
+            {
+                id: 2,
+                type: 'paper',
+                title: 'Claude Opus 4.5',
+                url: 'https://www.anthropic.com/blog',
+                date: '2025-11',
+                author: 'Anthropic',
+                desc: 'Anthropic 最新旗舰模型，号称"世界上最好的编码、Agent 和计算机使用模型"。',
+                tags: ['LLM', 'Claude', 'Opus']
+            },
+            {
+                id: 3,
+                type: 'resource',
+                title: 'Claude Cookbooks',
+                url: 'https://github.com/anthropics/claude-cookbooks',
+                date: '2025',
+                author: 'Anthropic',
+                desc: 'Anthropic 官方代码示例库，提供各种使用 Claude 的示例代码和教程。',
+                tags: ['GitHub', 'Cookbook', '代码示例']
+            },
+            {
+                id: 4,
+                type: 'paper',
+                title: 'ReAct: Synergizing Reasoning and Acting',
+                url: 'https://arxiv.org/abs/2210.03629',
+                date: '2022-10',
+                author: 'Princeton et al.',
+                desc: '提出 ReAct 范式，让 LLM 同时进行推理和行动，是 Agent 系统的核心论文之一。',
+                tags: ['Agent', 'ReAct', '推理']
+            },
+            {
+                id: 5,
+                type: 'blog',
+                title: 'Claude Agent SDK',
+                url: 'https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use',
+                date: '2025-09',
+                author: 'Anthropic',
+                desc: 'Anthropic 官方 Agent SDK，帮助开发者构建功能强大的 Claude Agent 应用。',
+                tags: ['SDK', 'Agent', '工具集成']
+            },
+            {
+                id: 6,
+                type: 'resource',
+                title: 'Tool Use Guide',
+                url: 'https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use',
+                date: '2025',
+                author: 'Anthropic',
+                desc: '详细讲解如何让 Claude 与外部工具和函数集成，扩展其能力边界。',
+                tags: ['Tool Use', '集成', '教程']
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        function render() {
+            const grid = document.getElementById('grid');
+            const stats = document.getElementById('stats');
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            
+            let filtered = papers.filter(p => {
+                const matchesType = currentFilter === 'all' || p.type === currentFilter;
+                const matchesSearch = !searchTerm || 
+                    p.title.toLowerCase().includes(searchTerm) ||
+                    p.tags.some(t => t.toLowerCase().includes(searchTerm)) ||
+                    p.desc.toLowerCase().includes(searchTerm);
+                return matchesType && matchesSearch;
+            });
+            
+            stats.textContent = `共 ${filtered.length} 条资源`;
+            
+            grid.innerHTML = filtered.map(p => `
+                <div class="paper-card">
+                    <span class="paper-type type-${p.type}">${p.type === 'paper' ? '📄 论文' : p.type === 'blog' ? '📝 博客' : '🔧 资源'}</span>
+                    <h3 class="paper-title"><a href="${p.url}" target="_blank">${p.title}</a></h3>
+                    <div class="paper-meta">${p.date} • ${p.author}</div>
+                    <div class="paper-desc">${p.desc}</div>
+                    <div class="paper-tags">
+                        ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filter(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-tag').forEach(t => {
+                t.classList.toggle('active', t.textContent.includes(type === 'all' ? '全部' : 
+                    type === 'paper' ? '论文' : type === 'blog' ? '博客' : '资源'));
+            });
+            render();
+        }
+
+        document.getElementById('search').addEventListener('input', render);
+        
+        // Initial render
+        render();
     </script>
 </body>
 </html>
