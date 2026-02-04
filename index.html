@@ -6,83 +6,49 @@
     <title>📚 研究资料库</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #f8f9fa;
-            color: #212529;
-            min-height: 100vh;
-        }
-        
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 32px 20px;
-            text-align: center;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fa; color: #212529; min-height: 100vh; }
+        header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 32px 20px; text-align: center; }
         header h1 { font-size: 1.8em; margin-bottom: 6px; }
         header p { opacity: 0.9; font-size: 13px; }
-        
-        /* Search */
         .search-area { background: white; padding: 16px 20px; border-bottom: 1px solid #e9ecef; }
         .search-box { max-width: 600px; margin: 0 auto; display: flex; gap: 10px; }
         .search-box input { flex: 1; padding: 10px 16px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 15px; outline: none; }
         .search-box input:focus { border-color: #4facfe; }
         .search-box button { padding: 10px 18px; background: #4facfe; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
-        
-        /* Tags */
         .tags-filter { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 12px 20px; background: white; border-bottom: 1px solid #e9ecef; }
         .tag-btn { padding: 6px 14px; background: #e9ecef; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
         .tag-btn:hover { background: #dee2e6; }
         .tag-btn.active { background: #4facfe; color: white; }
-        
-        /* Main */
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        
-        /* Stats */
         .stats-bar { display: flex; justify-content: center; gap: 20px; padding: 16px; background: white; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .stat-item { text-align: center; }
         .stat-num { font-size: 1.2em; font-weight: 600; color: #4facfe; }
         .stat-label { font-size: 12px; color: #86868b; }
-        
-        /* Section Header */
         .section-header { display: flex; align-items: center; gap: 10px; margin: 28px 0 16px; padding-bottom: 8px; border-bottom: 2px solid #4facfe; }
         .section-title { font-size: 1.1em; font-weight: 600; color: #495057; }
         .section-count { background: #4facfe; padding: 2px 10px; border-radius: 12px; font-size: 12px; color: white; }
-        
-        /* Grid */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-        
-        /* Card */
         .card { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.2s; border: 1px solid #e9ecef; }
         .card:hover { box-shadow: 0 6px 20px rgba(79, 172, 254, 0.15); border-color: #4facfe; }
-        
         .card-header { display: flex; gap: 12px; margin-bottom: 10px; }
         .card-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
         .icon-paper { background: #d4edda; }
         .icon-github { background: #e1d5f5; }
         .icon-blog { background: #d1ecf1; }
-        
         .card-main { flex: 1; min-width: 0; }
         .card-title { font-size: 0.95em; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
         .card-title a { color: #212529; text-decoration: none; }
         .card-title a:hover { color: #4facfe; }
         .card-meta { font-size: 12px; color: #6c757d; margin-bottom: 8px; }
         .card-desc { font-size: 13px; color: #495057; line-height: 1.5; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        /* Footer */
         .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid #f1f3f4; margin-top: 12px; }
         .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
         .tag { padding: 3px 8px; background: #e9ecef; border-radius: 6px; font-size: 11px; color: #495057; }
-        
         .card-actions { display: flex; gap: 6px; }
         .action-btn { display: flex; align-items: center; gap: 3px; padding: 5px 10px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; font-size: 12px; color: #6c757d; transition: all 0.15s; }
         .action-btn:hover { background: #e9ecef; }
         .action-btn.liked { background: #ffe3e3; border-color: #ffc9c9; color: #e91e63; }
         .action-btn.starred { background: #fff3e0; border-color: #ffe0b2; color: #ff9800; }
-        .action-btn .icon { font-size: 12px; }
-        
-        /* Comment */
         .comment-section { margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; display: none; border: 1px solid #e9ecef; }
         .comment-section.show { display: block; }
         .comment-input { width: 100%; padding: 10px; border: 1px solid #dee2e6; border-radius: 8px; font-size: 13px; resize: none; min-height: 60px; margin-bottom: 8px; background: white; }
@@ -94,11 +60,7 @@
         .comment-actions { display: flex; gap: 8px; align-items: center; }
         .comment-delete { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 12px; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; }
         .comment-delete:hover { background: #ffe3e3; }
-        
-        @media (max-width: 768px) {
-            header { background: linear-gradient(135deg, #4facfe 0%, #00c6fb 100%); }
-            .cards-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { header { background: linear-gradient(135deg, #4facfe 0%, #00c6fb 100%); } .cards-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -106,13 +68,11 @@
         <h1>📚 研究资料库</h1>
         <p>论文 • 开源项目 • 技术博客</p>
     </header>
-    
     <div class="search-area">
         <div class="search-box">
             <input type="text" id="search" placeholder="🔍 搜索...">
         </div>
     </div>
-    
     <div class="tags-filter" id="filters">
         <span class="tag-btn active" data-tag="all">全部</span>
         <span class="tag-btn" data-tag="paper">📄</span>
@@ -121,66 +81,55 @@
         <span class="tag-btn" data-tag="rag">RAG</span>
         <span class="tag-btn" data-tag="memory">记忆</span>
     </div>
-    
     <div class="container">
         <div class="stats-bar" id="stats"></div>
-        
         <div class="section-header">
-            <span class="section-title">📚 论文</span>
+            <span class="section-title">📚 核心论文</span>
             <span class="section-count" id="count-paper">0</span>
         </div>
         <div class="cards-grid" id="papers"></div>
-        
         <div class="section-header">
             <span class="section-title">🐙 开源项目</span>
             <span class="section-count" id="count-github">0</span>
         </div>
         <div class="cards-grid" id="githubs"></div>
-        
         <div class="section-header">
             <span class="section-title">📝 技术博客</span>
             <span class="section-count" id="count-blog">0</span>
         </div>
         <div class="cards-grid" id="blogs"></div>
     </div>
-
     <script>
         const data = {
             papers: [
-                { id: 1, type: 'paper', title: 'MemGPT: Towards LLMs as Operating Systems', url: 'https://arxiv.org/abs/2310.08560', date: '2023-10', authors: 'Packer et al.', desc: '提出虚拟上下文管理技术，借鉴操作系统分层内存系统，让 LLM 通过数据移动扩展上下文窗口。', tags: ['Memory', 'OS', 'Context'] },
-                { id: 2, type: 'paper', title: 'RAG: Retrieval-Augmented Generation', url: 'https://arxiv.org/abs/2005.11401', date: '2020-05', authors: 'Lewis et al.', desc: 'RAG 开山之作！将预训练检索器与 seq2seq 生成器结合，在知识密集型任务上达到 SOTA。', tags: ['RAG', 'Retrieval', 'Knowledge'] },
-                { id: 3, type: 'paper', title: 'KnowAgent: Knowledge-Augmented Planning', url: 'https://arxiv.org/abs/2403.03101', date: '2024-03', authors: 'Zhang et al.', desc: '引入动作知识库约束 Agent 规划轨迹，缓解规划幻觉问题。', tags: ['Agent', 'Planning', 'Knowledge'] },
-                { id: 4, type: 'paper', title: 'HippoRAG: Neuromorphic Memory for LLMs', url: 'https://arxiv.org/abs/2406.18507', date: '2024-06', authors: 'Gao et al.', desc: '受海马体记忆机制启发的 RAG 系统，模拟人类记忆的编码和检索过程。', tags: ['RAG', 'Neuromorphic', 'Hippocampus'] },
-                { id: 5, type: 'paper', title: 'GraphRAG: Knowledge Graphs for RAG', url: 'https://arxiv.org/abs/2404.16130', date: '2024-04', authors: 'Microsoft', desc: '利用知识图谱增强 RAG，通过实体关系推理提升复杂问题的理解质量。', tags: ['RAG', 'Graph', 'Knowledge'] }
+                { id: 1, type: 'paper', title: 'MemGPT: Towards LLMs as Operating Systems', url: 'https://arxiv.org/abs/2310.08560', date: '2023-10', authors: 'Packer et al.', desc: '提出虚拟上下文管理技术，借鉴操作系统分层内存系统，让 LLM 通过数据移动扩展上下文窗口。适用于长文档分析和多轮对话场景。', tags: ['Memory', 'OS', 'Context', '核心论文'] },
+                { id: 2, type: 'paper', title: 'RAG: Retrieval-Augmented Generation', url: 'https://arxiv.org/abs/2005.11401', date: '2020-05', authors: 'Lewis et al. (Facebook AI)', desc: 'RAG 开山之作！将预训练检索器与 seq2seq 生成器结合，在知识密集型任务上达到 SOTA。为大模型外部知识库增强奠定基础。', tags: ['RAG', 'Retrieval', 'Knowledge', '核心论文'] },
+                { id: 3, type: 'paper', title: 'KnowAgent: Knowledge-Augmented Planning for Agents', url: 'https://arxiv.org/abs/2403.03101', date: '2024-03', authors: 'Zhang et al.', desc: '引入动作知识库约束 Agent 规划轨迹，缓解规划幻觉问题。在 HotpotQA 和 ALFWorld 上取得优秀效果。', tags: ['Agent', 'Planning', 'Knowledge'] },
+                { id: 4, type: 'paper', title: 'HippoRAG: Neuromorphic Long-Term Memory for LLMs', url: 'https://arxiv.org/abs/2406.18507', date: '2024-06', authors: 'Gao et al.', desc: '受海马体记忆机制启发的 RAG 系统，模拟人类记忆的编码和检索过程，在多跳问答上效果显著。', tags: ['RAG', 'Neuromorphic', 'Hippocampus', '记忆'] },
+                { id: 5, type: 'paper', title: 'GraphRAG: Knowledge Graphs for RAG', url: 'https://arxiv.org/abs/2404.16130', date: '2024-04', authors: 'Microsoft Research', desc: '利用知识图谱增强 RAG，通过实体关系推理提升复杂问题的理解质量。', tags: ['RAG', 'Knowledge Graph', 'Graph'] },
+                { id: 6, type: 'paper', title: 'Self-Reflective RAG with Knowledge Memory', url: 'https://arxiv.org/abs/2412.11206', date: '2024-12', authors: 'Zhu et al.', desc: '提出知识记忆模块，让 RAG 系统能够反思检索结果并自适应调整检索策略。', tags: ['RAG', 'Self-Reflection', 'Memory'] },
+                { id: 7, type: 'paper', title: 'Agent memory: Survey of memory mechanisms', url: 'https://arxiv.org/abs/2410.03743', date: '2024-10', authors: 'Various', desc: '系统综述了 Agent 记忆机制，包括短期记忆、长期记忆、情景记忆等各类方法。', tags: ['Agent', 'Memory', 'Survey'] }
             ],
             github: [
                 { id: 10, type: 'github', title: 'memgpt/memgpt', url: 'https://github.com/memgpt/memgpt', date: '2023', authors: 'MemGPT Team', desc: 'MemGPT 官方实现，支持分层内存管理、函数调用、长期对话记忆等功能。', tags: ['Memory', 'Official', 'Chat'] },
-                { id: 11, type: 'github', title: 'facebookresearch/FAISS', url: 'https://github.com/facebookresearch/FAISS', date: '2017', authors: 'Facebook AI', desc: '高效的相似性搜索库，支持十亿级向量索引，是 RAG 检索组件的首选。', tags: ['Vector', 'Search', 'Index'] },
-                { id: 12, type: 'github', title: 'langchain-ai/langchain', url: 'https://github.com/langchain-ai/langchain', date: '2023', authors: 'LangChain', desc: '最流行的 LLM 应用开发框架，提供 RAG、Agent、Memory 等丰富组件。', tags: ['Framework', 'Agent', 'RAG'] }
+                { id: 11, type: 'github', title: 'facebookresearch/FAISS', url: 'https://github.com/facebookresearch/FAISS', date: '2017', authors: 'Facebook AI', desc: '高效的相似性搜索库，支持十亿级向量索引，是 RAG 检索组件的首选。', tags: ['Vector Search', 'Index'] },
+                { id: 12, type: 'github', title: 'langchain-ai/langchain', url: 'https://github.com/langchain-ai/langchain', date: '2023', authors: 'LangChain', desc: '最流行的 LLM 应用开发框架，提供 RAG、Agent、Memory 等丰富组件。', tags: ['Framework', 'Agent', 'RAG'] },
+                { id: 13, type: 'github', title: 'run-llama/ragstack', url: 'https://github.com/run-llama/ragstack', date: '2024', authors: 'LlamaIndex', desc: 'LlamaIndex 推出的企业级 RAG 解决方案，包含完整的数据摄取、检索、生成流程。', tags: ['RAG', 'Enterprise'] }
             ],
             blogs: [
-                { id: 20, type: 'blog', title: 'Building Effective Agents', url: 'https://www.anthropic.com/blog/building-effective-agents', date: '2025', authors: 'Anthropic', desc: 'Anthropic 官方博客，讨论有效 Agent 的设计原则。', tags: ['Agent', 'Best Practices'] },
-                { id: 21, type: 'blog', title: 'A Guide to Retrieval-Augmented Generation', url: 'https://www.pinecone.io/blog/retrieval-augmented-generation/', date: '2024', authors: 'Pinecone', desc: 'RAG 全面指南，从基础概念到生产部署。', tags: ['RAG', 'Tutorial'] }
+                { id: 20, type: 'blog', title: 'Building Effective Agents', url: 'https://www.anthropic.com/blog/building-effective-agents', date: '2025', authors: 'Anthropic', desc: 'Anthropic 官方博客，讨论有效 Agent 的设计原则，包括记忆、工具使用和迭代优化。', tags: ['Agent', 'Best Practices'] },
+                { id: 21, type: 'blog', title: 'A Guide to Retrieval-Augmented Generation', url: 'https://www.pinecone.io/blog/retrieval-augmented-generation/', date: '2024', authors: 'Pinecone', desc: 'RAG 全面指南，从基础概念到生产部署，涵盖向量数据库选择、检索策略优化等。', tags: ['RAG', 'Tutorial'] },
+                { id: 22, type: 'blog', title: 'Long Context LLMs vs RAG', url: 'https://www.langchain.com/blog/long-context-vs-rag/', date: '2024', authors: 'LangChain', desc: '对比长上下文 LLM 与 RAG 的优缺点，分析不同场景下的最佳选择策略。', tags: ['RAG', 'Long Context'] }
             ]
         };
-
         function getStorage() { const s = localStorage.getItem('researchDB'); return s ? JSON.parse(s) : { liked: {}, starred: {}, comments: {} }; }
         function saveStorage(s) { localStorage.setItem('researchDB', JSON.stringify(s)); }
-
-        function fuzzyMatch(text, term) {
-            if (!term || !text) return false;
-            return text.toLowerCase().includes(term.toLowerCase());
-        }
-        function matchesSearch(item, term) {
-            if (!term) return true;
-            return [item.title, item.desc, ...item.tags, item.authors].some(f => fuzzyMatch(f, term));
-        }
-
+        function fuzzyMatch(text, term) { if (!term || !text) return false; return text.toLowerCase().includes(term.toLowerCase()); }
+        function matchesSearch(item, term) { if (!term) return true; return [item.title, item.desc, ...item.tags, item.authors].some(f => fuzzyMatch(f, term)); }
         function render() {
             const s = getStorage();
             const term = document.getElementById('search').value;
             const tag = document.querySelector('.tag-btn.active').dataset.tag;
-            
             const filterFn = (item) => {
                 const tagMatch = tag === 'all' || 
                     (tag === 'paper' && item.type === 'paper') ||
@@ -190,33 +139,24 @@
                     (tag === 'memory' && item.tags.some(t => t.toLowerCase().includes('memory') || t.toLowerCase().includes('context')));
                 return tagMatch && matchesSearch(item, term);
             };
-            
             const fp = data.papers.filter(filterFn);
             const fg = data.github.filter(filterFn);
             const fb = data.blogs.filter(filterFn);
-            
             document.getElementById('stats').innerHTML = `
                 <div class="stat-item"><div class="stat-num">${data.papers.length}</div><div class="stat-label">论文</div></div>
                 <div class="stat-item"><div class="stat-num">${data.github.length}</div><div class="stat-label">开源</div></div>
                 <div class="stat-item"><div class="stat-num">${data.blogs.length}</div><div class="stat-label">博客</div></div>
-                <div class="stat-item"><div class="stat-num">${Object.values(s.liked).filter(Boolean).length}</div><div class="stat-label">已赞</div></div>
-            `;
-            
+                <div class="stat-item"><div class="stat-num">${Object.values(s.liked).filter(Boolean).length}</div><div class="stat-label">已赞</div></div>`;
             document.getElementById('count-paper').textContent = fp.length;
             document.getElementById('count-github').textContent = fg.length;
             document.getElementById('count-blog').textContent = fb.length;
-            
             renderSection('papers', fp, s);
             renderSection('githubs', fg, s);
             renderSection('blogs', fb, s);
         }
-
         function renderSection(id, items, storage) {
             const el = document.getElementById(id);
-            if (items.length === 0) {
-                el.innerHTML = '<p style="color:#adb5bd;font-size:14px;padding:20px;">暂无内容</p>';
-                return;
-            }
+            if (items.length === 0) { el.innerHTML = '<p style="color:#adb5bd;font-size:14px;padding:20px;">暂无内容</p>'; return; }
             el.innerHTML = items.map(item => `
                 <div class="card">
                     <div class="card-header">
@@ -241,10 +181,8 @@
                         <div class="comments-list" id="cl-${item.id}">
                             ${(storage.comments[item.id] || []).map((c, idx) => `
                                 <div class="comment-item">
-                                    <div>${c.text}<div class="comment-date">${c.date}</div></div>
-                                    <div class="comment-actions">
-                                        <button class="comment-delete" onclick="deleteComment(${item.id}, ${idx})">删除</button>
-                                    </div>
+                                    <div><div>${c.text}</div><div class="comment-date">${c.date}</div></div>
+                                    <div class="comment-actions"><button class="comment-delete" onclick="deleteComment(${item.id}, ${idx})">删除</button></div>
                                 </div>
                             `).join('')}
                         </div>
@@ -252,7 +190,6 @@
                 </div>
             `).join('');
         }
-
         function toggle(type, id) { const s = getStorage(); s[type][id] = !s[type][id]; saveStorage(s); render(); }
         function toggleComment(id) { document.getElementById('c-' + id).classList.toggle('show'); }
         function addComment(id) {
@@ -267,14 +204,8 @@
         }
         function deleteComment(itemId, commentIdx) {
             const s = getStorage();
-            if (s.comments[itemId]) {
-                s.comments[itemId].splice(commentIdx, 1);
-                if (s.comments[itemId].length === 0) delete s.comments[itemId];
-                saveStorage(s);
-                render();
-            }
+            if (s.comments[itemId]) { s.comments[itemId].splice(commentIdx, 1); if (s.comments[itemId].length === 0) delete s.comments[itemId]; saveStorage(s); render(); }
         }
-
         document.getElementById('search').addEventListener('input', render);
         document.querySelectorAll('.tag-btn').forEach(b => {
             b.addEventListener('click', () => {
