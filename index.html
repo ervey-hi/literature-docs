@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 AI/LLM 文献资料库</title>
+    <title>📚 LLM 长期记忆研究资料库</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -71,7 +71,7 @@
         
         .papers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 20px;
         }
         
@@ -98,6 +98,7 @@
         .type-paper { background: #e8f5e9; color: #2e7d32; }
         .type-blog { background: #e3f2fd; color: #1565c0; }
         .type-resource { background: #fff3e0; color: #ef6c00; }
+        .type-github { background: #f3e5f5; color: #7b1fa2; }
         
         .paper-title {
             font-size: 1.1em;
@@ -137,6 +138,14 @@
             color: #515154;
         }
         
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007aff;
+        }
+        
         .stats {
             text-align: center;
             padding: 20px;
@@ -151,8 +160,8 @@
 </head>
 <body>
     <header>
-        <h1>📚 AI/LLM 文献资料库</h1>
-        <p>论文 • 博客 • 技术资源</p>
+        <h1>🧠 LLM 长期记忆研究资料库</h1>
+        <p>RAG • 记忆增强 • 持续学习 • 知识编辑</p>
         <div class="search-box">
             <input type="text" id="search" placeholder="🔍 搜索标题、标签、描述...">
             <button onclick="filter()">搜索</button>
@@ -162,102 +171,211 @@
     <div class="filters" id="filters">
         <span class="filter-tag active" onclick="filter('all')">全部</span>
         <span class="filter-tag" onclick="filter('paper')">📄 论文</span>
+        <span class="filter-tag" onclick="filter('github')">🐙 GitHub</span>
         <span class="filter-tag" onclick="filter('blog')">📝 博客</span>
-        <span class="filter-tag" onclick="filter('resource')">🔧 资源</span>
+        <span class="filter-tag" onclick="filter('rag')">🏷️ RAG</span>
+        <span class="filter-tag" onclick="filter('memory')">🏷️ 记忆</span>
     </div>
     
     <div class="container">
         <div class="stats" id="stats"></div>
-        <div class="papers-grid" id="grid"></div>
+        
+        <h2 class="section-title">📚 核心论文</h2>
+        <div class="papers-grid" id="papers"></div>
+        
+        <h2 class="section-title">🔧 开源项目</h2>
+        <div class="papers-grid" id="githubs"></div>
+        
+        <h2 class="section-title">📝 技术博客</h2>
+        <div class="papers-grid" id="blogs"></div>
     </div>
 
     <script>
-        const papers = [
-            {
-                id: 1,
-                type: 'blog',
-                title: 'Building Effective Agents',
-                url: 'https://www.anthropic.com/blog/building-effective-agents',
-                date: '2025-12',
-                author: 'Anthropic',
-                desc: 'Anthropic 官方博客，讨论如何构建有效的 AI Agent，包括常见模式、工具使用和最佳实践。',
-                tags: ['Agent', 'Anthropic', '最佳实践']
-            },
-            {
-                id: 2,
-                type: 'paper',
-                title: 'Claude Opus 4.5',
-                url: 'https://www.anthropic.com/blog',
-                date: '2025-11',
-                author: 'Anthropic',
-                desc: 'Anthropic 最新旗舰模型，号称"世界上最好的编码、Agent 和计算机使用模型"。',
-                tags: ['LLM', 'Claude', 'Opus']
-            },
-            {
-                id: 3,
-                type: 'resource',
-                title: 'Claude Cookbooks',
-                url: 'https://github.com/anthropics/claude-cookbooks',
-                date: '2025',
-                author: 'Anthropic',
-                desc: 'Anthropic 官方代码示例库，提供各种使用 Claude 的示例代码和教程。',
-                tags: ['GitHub', 'Cookbook', '代码示例']
-            },
-            {
-                id: 4,
-                type: 'paper',
-                title: 'ReAct: Synergizing Reasoning and Acting',
-                url: 'https://arxiv.org/abs/2210.03629',
-                date: '2022-10',
-                author: 'Princeton et al.',
-                desc: '提出 ReAct 范式，让 LLM 同时进行推理和行动，是 Agent 系统的核心论文之一。',
-                tags: ['Agent', 'ReAct', '推理']
-            },
-            {
-                id: 5,
-                type: 'blog',
-                title: 'Claude Agent SDK',
-                url: 'https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use',
-                date: '2025-09',
-                author: 'Anthropic',
-                desc: 'Anthropic 官方 Agent SDK，帮助开发者构建功能强大的 Claude Agent 应用。',
-                tags: ['SDK', 'Agent', '工具集成']
-            },
-            {
-                id: 6,
-                type: 'resource',
-                title: 'Tool Use Guide',
-                url: 'https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use',
-                date: '2025',
-                author: 'Anthropic',
-                desc: '详细讲解如何让 Claude 与外部工具和函数集成，扩展其能力边界。',
-                tags: ['Tool Use', '集成', '教程']
-            }
-        ];
+        const data = {
+            papers: [
+                {
+                    id: 1,
+                    type: 'paper',
+                    title: 'MemGPT: Towards LLMs as Operating Systems',
+                    url: 'https://arxiv.org/abs/2310.08560',
+                    date: '2023-10',
+                    authors: 'Packer et al.',
+                    desc: '提出虚拟上下文管理技术，借鉴操作系统分层内存系统，让 LLM 通过数据移动扩展上下文窗口。适用于长文档分析和多轮对话场景。',
+                    tags: ['Memory', 'OS-inspired', 'Extended Context']
+                },
+                {
+                    id: 2,
+                    type: 'paper',
+                    title: 'RAG: Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks',
+                    url: 'https://arxiv.org/abs/2005.11401',
+                    date: '2020-05',
+                    authors: 'Lewis et al. (Facebook AI)',
+                    desc: 'RAG 开山之作！将预训练检索器与 seq2seq 生成器结合，在知识密集型任务上达到 SOTA。为大模型外部知识库增强奠定基础。',
+                    tags: ['RAG', 'Retrieval', 'Knowledge Base']
+                },
+                {
+                    id: 3,
+                    type: 'paper',
+                    title: 'KnowAgent: Knowledge-Augmented Planning for LLM-Based Agents',
+                    url: 'https://arxiv.org/abs/2403.03101',
+                    date: '2024-03',
+                    authors: 'Zhang et al.',
+                    desc: '引入动作知识库约束 Agent 规划轨迹，缓解规划幻觉问题。在 HotpotQA 和 ALFWorld 上取得优秀效果。',
+                    tags: ['Agent', 'Planning', 'Knowledge-Augmented']
+                },
+                {
+                    id: 4,
+                    type: 'paper',
+                    title: 'Self-Reflective RAG with Knowledge Memory',
+                    url: 'https://arxiv.org/abs/2412.11206',
+                    date: '2024-12',
+                    authors: 'Zhu et al.',
+                    desc: '提出知识记忆模块，让 RAG 系统能够反思检索结果并自适应调整检索策略，显著提升问答准确性。',
+                    tags: ['RAG', 'Self-Reflection', 'Memory']
+                },
+                {
+                    id: 5,
+                    type: 'paper',
+                    title: 'HippoRAG: Neuromorphic Long-Term Memory for LLMs',
+                    url: 'https://arxiv.org/abs/2406.18507',
+                    date: '2024-06',
+                    authors: 'Gao et al.',
+                    desc: '受海马体记忆机制启发的 RAG 系统，模拟人类记忆的编码和检索过程，在多跳问答上效果显著。',
+                    tags: ['RAG', 'Neuromorphic', 'Hippocampus']
+                },
+                {
+                    id: 6,
+                    type: 'paper',
+                    title: 'GraphRAG: Enhancing Retrieval-Augmented Generation with Knowledge Graphs',
+                    url: 'https://arxiv.org/abs/2404.16130',
+                    date: '2024-04',
+                    authors: 'Microsoft Research',
+                    desc: '利用知识图谱增强 RAG，通过实体关系推理提升复杂问题的理解和回答质量。',
+                    tags: ['RAG', 'Knowledge Graph', 'Graph']
+                }
+            ],
+            github: [
+                {
+                    id: 10,
+                    type: 'github',
+                    title: 'memgpt/memgpt',
+                    url: 'https://github.com/memgpt/memgpt',
+                    date: '2023',
+                    authors: 'MemGPT Team',
+                    desc: 'MemGPT 官方实现，支持分层内存管理、函数调用、长期对话记忆等功能。',
+                    tags: ['Memory', 'Official', 'Chat']
+                },
+                {
+                    id: 11,
+                    type: 'github',
+                    title: 'facebookresearch/FAISS',
+                    url: 'https://github.com/facebookresearch/FAISS',
+                    date: '2017',
+                    authors: 'Facebook AI',
+                    desc: '高效的相似性搜索库，支持十亿级向量索引，是 RAG 系统检索组件的首选。',
+                    tags: ['Vector Search', 'Index', 'Facebook']
+                },
+                {
+                    id: 12,
+                    type: 'github',
+                    title: 'run-llama/ragstack',
+                    url: 'https://github.com/run-llama/ragstack',
+                    date: '2024',
+                    authors: 'LlamaIndex',
+                    desc: 'LlamaIndex 推出的企业级 RAG 解决方案，包含完整的数据摄取、检索、生成流程。',
+                    tags: ['RAG', 'Enterprise', 'LlamaIndex']
+                },
+                {
+                    id: 13,
+                    type: 'github',
+                    title: 'langchain-ai/langchain',
+                    url: 'https://github.com/langchain-ai/langchain',
+                    date: '2023',
+                    authors: 'LangChain',
+                    desc: '最流行的 LLM 应用开发框架，提供丰富的 RAG、Agent、Memory 组件。',
+                    tags: ['Framework', 'Agent', 'RAG']
+                }
+            ],
+            blogs: [
+                {
+                    id: 20,
+                    type: 'blog',
+                    title: 'Building Effective Agents',
+                    url: 'https://www.anthropic.com/blog/building-effective-agents',
+                    date: '2025',
+                    authors: 'Anthropic',
+                    desc: 'Anthropic 官方博客，讨论有效 Agent 的设计原则，包括记忆、工具使用和迭代优化。',
+                    tags: ['Agent', 'Best Practices', 'Anthropic']
+                },
+                {
+                    id: 21,
+                    type: 'blog',
+                    title: 'A Guide to Retrieval-Augmented Generation',
+                    url: 'https://www.pinecone.io/blog/retrieval-augmented-generation/',
+                    date: '2024',
+                    authors: 'Pinecone',
+                    desc: 'RAG 全面指南，从基础概念到生产部署，涵盖向量数据库选择、检索策略优化等。',
+                    tags: ['RAG', 'Tutorial', 'Pinecone']
+                },
+                {
+                    id: 22,
+                    type: 'blog',
+                    title: 'Long Context LLMs vs RAG',
+                    url: 'https://www.langchain.com/blog/long-context-vs-rag/',
+                    date: '2024',
+                    authors: 'LangChain',
+                    desc: '对比长上下文 LLM 与 RAG 的优缺点，分析不同场景下的最佳选择策略。',
+                    tags: ['RAG', 'Long Context', 'Comparison']
+                }
+            ]
+        };
 
         let currentFilter = 'all';
+        let currentSearch = '';
 
         function render() {
-            const grid = document.getElementById('grid');
-            const stats = document.getElementById('stats');
-            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const searchTerm = currentSearch.toLowerCase();
             
-            let filtered = papers.filter(p => {
-                const matchesType = currentFilter === 'all' || p.type === currentFilter;
+            const filterFn = (item) => {
+                const matchesFilter = currentFilter === 'all' || 
+                    (currentFilter === 'paper' && item.type === 'paper') ||
+                    (currentFilter === 'github' && item.type === 'github') ||
+                    (currentFilter === 'blog' && item.type === 'blog') ||
+                    (currentFilter === 'rag' && item.tags.some(t => t.toLowerCase().includes('rag'))) ||
+                    (currentFilter === 'memory' && item.tags.some(t => t.toLowerCase().includes('memory') || t.toLowerCase().includes('context')));
+                
                 const matchesSearch = !searchTerm || 
-                    p.title.toLowerCase().includes(searchTerm) ||
-                    p.tags.some(t => t.toLowerCase().includes(searchTerm)) ||
-                    p.desc.toLowerCase().includes(searchTerm);
-                return matchesType && matchesSearch;
-            });
+                    item.title.toLowerCase().includes(searchTerm) ||
+                    item.tags.some(t => t.toLowerCase().includes(searchTerm)) ||
+                    item.desc.toLowerCase().includes(searchTerm);
+                
+                return matchesFilter && matchesSearch;
+            };
             
-            stats.textContent = `共 ${filtered.length} 条资源`;
+            const filteredPapers = data.papers.filter(filterFn);
+            const filteredGithub = data.github.filter(filterFn);
+            const filteredBlogs = data.blogs.filter(filterFn);
             
-            grid.innerHTML = filtered.map(p => `
+            document.getElementById('stats').textContent = 
+                `论文 ${filteredPapers.length} | GitHub ${filteredGithub.length} | 博客 ${filteredBlogs.length}`;
+            
+            renderSection('papers', filteredPapers);
+            renderSection('githubs', filteredGithub);
+            renderSection('blogs', filteredBlogs);
+        }
+
+        function renderSection(id, items) {
+            const el = document.getElementById(id);
+            if (items.length === 0) {
+                el.innerHTML = '<p style="color:#86868b;padding:20px;">暂无内容</p>';
+                return;
+            }
+            
+            el.innerHTML = items.map(p => `
                 <div class="paper-card">
-                    <span class="paper-type type-${p.type}">${p.type === 'paper' ? '📄 论文' : p.type === 'blog' ? '📝 博客' : '🔧 资源'}</span>
+                    <span class="paper-type type-${p.type}">${p.type === 'paper' ? '📄 论文' : p.type === 'github' ? '🐙 GitHub' : '📝 博客'}</span>
                     <h3 class="paper-title"><a href="${p.url}" target="_blank">${p.title}</a></h3>
-                    <div class="paper-meta">${p.date} • ${p.author}</div>
+                    <div class="paper-meta">${p.date} • ${p.authors}</div>
                     <div class="paper-desc">${p.desc}</div>
                     <div class="paper-tags">
                         ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
@@ -268,16 +386,18 @@
 
         function filter(type) {
             currentFilter = type;
-            document.querySelectorAll('.filter-tag').forEach(t => {
-                t.classList.toggle('active', t.textContent.includes(type === 'all' ? '全部' : 
-                    type === 'paper' ? '论文' : type === 'blog' ? '博客' : '资源'));
+            document.querySelectorAll('.filter-tag').forEach((t, i) => {
+                const types = ['all', 'paper', 'github', 'blog', 'rag', 'memory'];
+                t.classList.toggle('active', types[i] === type);
             });
             render();
         }
 
-        document.getElementById('search').addEventListener('input', render);
+        document.getElementById('search').addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            render();
+        });
         
-        // Initial render
         render();
     </script>
 </body>
