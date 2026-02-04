@@ -89,8 +89,11 @@
         .comment-input:focus { outline: none; border-color: #4facfe; }
         .comment-submit { padding: 8px 16px; background: #4facfe; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; }
         .comments-list { margin-top: 10px; }
-        .comment-item { padding: 10px; background: white; border-radius: 8px; margin-bottom: 6px; font-size: 13px; border: 1px solid #e9ecef; }
+        .comment-item { padding: 10px; background: white; border-radius: 8px; margin-bottom: 6px; font-size: 13px; border: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: flex-start; }
         .comment-date { font-size: 11px; color: #adb5bd; margin-top: 4px; }
+        .comment-actions { display: flex; gap: 8px; align-items: center; }
+        .comment-delete { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 12px; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; }
+        .comment-delete:hover { background: #ffe3e3; }
         
         @media (max-width: 768px) {
             header { background: linear-gradient(135deg, #4facfe 0%, #00c6fb 100%); }
@@ -235,7 +238,16 @@
                     <div class="comment-section" id="c-${item.id}">
                         <textarea class="comment-input" id="i-${item.id}" placeholder="添加评论..."></textarea>
                         <button class="comment-submit" onclick="addComment(${item.id})">发布</button>
-                        <div class="comments-list" id="cl-${item.id}">${(storage.comments[item.id] || []).map(c => `<div class="comment-item">${c.text}<div class="comment-date">${c.date}</div></div>`).join('')}</div>
+                        <div class="comments-list" id="cl-${item.id}">
+                            ${(storage.comments[item.id] || []).map((c, idx) => `
+                                <div class="comment-item">
+                                    <div>${c.text}<div class="comment-date">${c.date}</div></div>
+                                    <div class="comment-actions">
+                                        <button class="comment-delete" onclick="deleteComment(${item.id}, ${idx})">删除</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -252,6 +264,15 @@
             saveStorage(s);
             render();
             setTimeout(() => document.getElementById('c-' + id).classList.add('show'), 50);
+        }
+        function deleteComment(itemId, commentIdx) {
+            const s = getStorage();
+            if (s.comments[itemId]) {
+                s.comments[itemId].splice(commentIdx, 1);
+                if (s.comments[itemId].length === 0) delete s.comments[itemId];
+                saveStorage(s);
+                render();
+            }
         }
 
         document.getElementById('search').addEventListener('input', render);
