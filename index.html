@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 文献笔记</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #00d9ff; margin-bottom: 20px; font-size: 1.8em; }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card h2 { color: #00d9ff; margin-bottom: 12px; font-size: 1.2em; }
+        .card h3 { color: #7fdbca; margin: 16px 0 8px; font-size: 1em; }
+        .card a { color: #00d9ff; text-decoration: none; }
+        .card a:hover { text-decoration: underline; }
+        ul { margin-left: 20px; }
+        li { margin: 6px 0; line-height: 1.6; }
+        .meta { color: #888; font-size: 0.9em; margin-bottom: 12px; }
+        .tag { 
+            background: rgba(0,217,255,0.2); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 0.8em;
+            margin-right: 8px;
+        }
+        .divider { border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 文献笔记</h1>
+        <p class="meta">最后更新: <span id="last-update"></span></p>
+        
+        <div class="card">
+            <h2>📚 Anthropic Agent 技术文献</h2>
+            <p class="meta">2026-02-04</p>
+            
+            <h3>一、Claude Agent SDK 官方资源</h3>
+            <ul>
+                <li>
+                    🔗 <a href="https://github.com/anthropics/claude-cookbooks" target="_blank">Claude Cookbooks</a>
+                    <br><small style="color:#888">Anthropic 官方维护的代码示例库</small>
+                </li>
+                <li>
+                    🔗 <a href="https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use" target="_blank">Tool Use 指南</a>
+                    <br><small style="color:#888">讲解如何让 Claude 与外部工具集成</small>
+                </li>
+            </ul>
+            
+            <h3>二、Anthropic 官方博客 (2025年)</h3>
+            <ul>
+                <li>• Claude Opus 4.5 (2025-11): 世界上最好的编码/Agent/计算机使用模型</li>
+                <li>• Claude Sonnet 4.5 + Agent SDK (2025-09): 刷新编码/推理基准记录</li>
+                <li>• 融资消息 (2025-09): 130亿美元，估值 1830亿美元</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>🔗 资源汇总</h2>
+            <ul>
+                <li><span class="tag">官方</span> <a href="https://www.anthropic.com/blog" target="_blank">Anthropic 官方博客</a></li>
+                <li><span class="tag">代码</span> <a href="https://github.com/anthropics/claude-cookbooks" target="_blank">Claude Cookbooks</a></li>
+                <li><span class="tag">文档</span> <a href="https://docs.claude.com" target="_blank">Claude API 文档</a></li>
+                <li><span class="tag">社区</span> <a href="https://www.anthropic.com/discord" target="_blank">Anthropic Discord</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('last-update').textContent = new Date().toLocaleString('zh-CN');
+    </script>
+</body>
+</html>
