@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 LLM 长期记忆研究资料库</title>
+    <title>📚 研究资料库</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -12,123 +12,166 @@
             color: #1d1d1f;
             min-height: 100vh;
         }
+        
+        /* Header */
         header {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
             padding: 40px 20px;
             text-align: center;
         }
-        header h1 { font-size: 2em; margin-bottom: 10px; }
-        header p { opacity: 0.8; margin-bottom: 20px; }
+        header h1 { font-size: 2em; margin-bottom: 8px; }
+        header p { opacity: 0.8; font-size: 14px; }
         
+        /* Search Area */
+        .search-area {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
         .search-box {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
         .search-box input {
             flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
+            padding: 14px 20px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
             font-size: 16px;
             outline: none;
+            transition: border-color 0.2s;
         }
+        .search-box input:focus { border-color: #007aff; }
         .search-box button {
-            padding: 12px 25px;
+            padding: 14px 24px;
             background: #007aff;
             color: white;
             border: none;
-            border-radius: 25px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
         }
         
-        .filters {
-            padding: 20px;
-            background: white;
-            border-bottom: 1px solid #e5e5e5;
+        /* Tags Filter */
+        .tags-filter {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
+            padding: 16px 20px;
+            background: white;
         }
-        .filter-tag {
+        .tag-btn {
             padding: 8px 16px;
             background: #f5f5f7;
+            border: 2px solid transparent;
             border-radius: 20px;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.2s;
         }
-        .filter-tag:hover, .filter-tag.active {
+        .tag-btn:hover { background: #e5e5e5; }
+        .tag-btn.active {
             background: #007aff;
             color: white;
         }
         
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        /* Main Content */
+        .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
         
-        .papers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 20px;
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e5e5e5;
+        }
+        .section-title { font-size: 1.3em; font-weight: 600; color: #1d1d1f; }
+        .section-count { 
+            background: #f5f5f7; 
+            padding: 4px 12px; 
+            border-radius: 12px; 
+            font-size: 13px;
+            color: #86868b;
         }
         
-        .paper-card {
+        /* Card Grid */
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        /* Card */
+        .card {
             background: white;
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             transition: all 0.2s;
         }
-        .paper-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
         }
         
-        .paper-type {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
             margin-bottom: 12px;
         }
-        .type-paper { background: #e8f5e9; color: #2e7d32; }
-        .type-blog { background: #e3f2fd; color: #1565c0; }
-        .type-resource { background: #fff3e0; color: #ef6c00; }
-        .type-github { background: #f3e5f5; color: #7b1fa2; }
         
-        .paper-title {
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .icon-paper { background: #e8f5e9; }
+        .icon-github { background: #f3e5f5; }
+        .icon-blog { background: #e3f2fd; }
+        
+        .card-main { flex: 1; }
+        
+        .card-title {
             font-size: 1.1em;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             line-height: 1.4;
         }
-        .paper-title a {
+        .card-title a {
             color: #1d1d1f;
             text-decoration: none;
         }
-        .paper-title a:hover { color: #007aff; }
+        .card-title a:hover { color: #007aff; }
         
-        .paper-meta {
+        .card-meta {
             font-size: 13px;
             color: #86868b;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         
-        .paper-desc {
+        .card-desc {
             font-size: 14px;
             color: #515154;
             line-height: 1.6;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         
-        .paper-tags {
+        .card-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            margin-bottom: 16px;
         }
         .tag {
             padding: 4px 10px;
@@ -138,59 +181,132 @@
             color: #515154;
         }
         
-        .section-title {
-            font-size: 1.5em;
-            font-weight: 600;
-            margin: 40px 0 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #007aff;
+        /* Actions */
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
         }
         
-        .stats {
-            text-align: center;
-            padding: 20px;
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: #f5f5f7;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #515154;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background: #e5e5e5; }
+        .action-btn.starred { background: #fff3e0; color: #ef6c00; }
+        .action-btn.liked { background: #fce4ec; color: #e91e63; }
+        
+        /* Comment Section */
+        .comment-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: #fafafa;
+            border-radius: 12px;
+            display: none;
+        }
+        .comment-section.show { display: block; }
+        
+        .comment-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 10px;
+        }
+        .comment-input:focus { outline: none; border-color: #007aff; }
+        
+        .comment-submit {
+            padding: 10px 20px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .comments-list {
+            margin-top: 16px;
+        }
+        .comment-item {
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .comment-date {
+            font-size: 12px;
             color: #86868b;
+            margin-top: 6px;
         }
         
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 20px;
+            background: white;
+            margin-bottom: 20px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-num { font-size: 1.5em; font-weight: 600; color: #007aff; }
+        .stat-label { font-size: 13px; color: #86868b; }
+        
+        /* Mobile */
         @media (max-width: 768px) {
-            .papers-grid { grid-template-columns: 1fr; }
             header h1 { font-size: 1.5em; }
+            .search-box { flex-direction: column; }
+            .stats-bar { flex-wrap: wrap; gap: 16px; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>🧠 LLM 长期记忆研究资料库</h1>
-        <p>RAG • 记忆增强 • 持续学习 • 知识编辑</p>
-        <div class="search-box">
-            <input type="text" id="search" placeholder="🔍 搜索标题、标签、描述...">
-            <button onclick="filter()">搜索</button>
-        </div>
+        <h1>📚 研究资料库</h1>
+        <p>论文 • 开源项目 • 技术博客 • 学习笔记</p>
     </header>
     
-    <div class="filters" id="filters">
-        <span class="filter-tag active" onclick="filter('all')">全部</span>
-        <span class="filter-tag" onclick="filter('paper')">📄 论文</span>
-        <span class="filter-tag" onclick="filter('github')">🐙 GitHub</span>
-        <span class="filter-tag" onclick="filter('blog')">📝 博客</span>
-        <span class="filter-tag" onclick="filter('rag')">🏷️ RAG</span>
-        <span class="filter-tag" onclick="filter('memory')">🏷️ 记忆</span>
+    <div class="search-area">
+        <div class="search-box">
+            <input type="text" id="search" placeholder="🔍 搜索标题、描述、标签、作者...">
+        </div>
+    </div>
+    
+    <div class="tags-filter" id="filters">
+        <span class="tag-btn active" data-tag="all">全部</span>
+        <span class="tag-btn" data-tag="paper">📄 论文</span>
+        <span class="tag-btn" data-tag="github">🐙 开源</span>
+        <span class="tag-btn" data-tag="blog">📝 博客</span>
+        <span class="tag-btn" data-tag="rag">🏷️ RAG</span>
+        <span class="tag-btn" data-tag="memory">🏷️ 记忆</span>
     </div>
     
     <div class="container">
-        <div class="stats" id="stats"></div>
+        <div class="stats-bar" id="stats"></div>
         
-        <h2 class="section-title">📚 核心论文</h2>
-        <div class="papers-grid" id="papers"></div>
-        
-        <h2 class="section-title">🔧 开源项目</h2>
-        <div class="papers-grid" id="githubs"></div>
-        
-        <h2 class="section-title">📝 技术博客</h2>
-        <div class="papers-grid" id="blogs"></div>
+        <div class="cards-grid" id="content"></div>
     </div>
 
     <script>
+        // ============ Data ============
         const data = {
             papers: [
                 {
@@ -206,51 +322,41 @@
                 {
                     id: 2,
                     type: 'paper',
-                    title: 'RAG: Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks',
+                    title: 'RAG: Retrieval-Augmented Generation',
                     url: 'https://arxiv.org/abs/2005.11401',
                     date: '2020-05',
                     authors: 'Lewis et al. (Facebook AI)',
-                    desc: 'RAG 开山之作！将预训练检索器与 seq2seq 生成器结合，在知识密集型任务上达到 SOTA。为大模型外部知识库增强奠定基础。',
+                    desc: 'RAG 开山之作！将预训练检索器与 seq2seq 生成器结合，在知识密集型任务上达到 SOTA。',
                     tags: ['RAG', 'Retrieval', 'Knowledge Base']
                 },
                 {
                     id: 3,
                     type: 'paper',
-                    title: 'KnowAgent: Knowledge-Augmented Planning for LLM-Based Agents',
+                    title: 'KnowAgent: Knowledge-Augmented Planning for Agents',
                     url: 'https://arxiv.org/abs/2403.03101',
                     date: '2024-03',
                     authors: 'Zhang et al.',
-                    desc: '引入动作知识库约束 Agent 规划轨迹，缓解规划幻觉问题。在 HotpotQA 和 ALFWorld 上取得优秀效果。',
+                    desc: '引入动作知识库约束 Agent 规划轨迹，缓解规划幻觉问题。在 HotpotQA 和 ALFWorld 上效果优秀。',
                     tags: ['Agent', 'Planning', 'Knowledge-Augmented']
                 },
                 {
                     id: 4,
                     type: 'paper',
-                    title: 'Self-Reflective RAG with Knowledge Memory',
-                    url: 'https://arxiv.org/abs/2412.11206',
-                    date: '2024-12',
-                    authors: 'Zhu et al.',
-                    desc: '提出知识记忆模块，让 RAG 系统能够反思检索结果并自适应调整检索策略，显著提升问答准确性。',
-                    tags: ['RAG', 'Self-Reflection', 'Memory']
-                },
-                {
-                    id: 5,
-                    type: 'paper',
                     title: 'HippoRAG: Neuromorphic Long-Term Memory for LLMs',
                     url: 'https://arxiv.org/abs/2406.18507',
                     date: '2024-06',
                     authors: 'Gao et al.',
-                    desc: '受海马体记忆机制启发的 RAG 系统，模拟人类记忆的编码和检索过程，在多跳问答上效果显著。',
+                    desc: '受海马体记忆机制启发的 RAG 系统，模拟人类记忆的编码和检索过程。',
                     tags: ['RAG', 'Neuromorphic', 'Hippocampus']
                 },
                 {
-                    id: 6,
+                    id: 5,
                     type: 'paper',
-                    title: 'GraphRAG: Enhancing Retrieval-Augmented Generation with Knowledge Graphs',
+                    title: 'GraphRAG: Knowledge Graphs for RAG',
                     url: 'https://arxiv.org/abs/2404.16130',
                     date: '2024-04',
                     authors: 'Microsoft Research',
-                    desc: '利用知识图谱增强 RAG，通过实体关系推理提升复杂问题的理解和回答质量。',
+                    desc: '利用知识图谱增强 RAG，通过实体关系推理提升复杂问题的理解质量。',
                     tags: ['RAG', 'Knowledge Graph', 'Graph']
                 }
             ],
@@ -272,27 +378,17 @@
                     url: 'https://github.com/facebookresearch/FAISS',
                     date: '2017',
                     authors: 'Facebook AI',
-                    desc: '高效的相似性搜索库，支持十亿级向量索引，是 RAG 系统检索组件的首选。',
+                    desc: '高效的相似性搜索库，支持十亿级向量索引，是 RAG 检索组件的首选。',
                     tags: ['Vector Search', 'Index', 'Facebook']
                 },
                 {
                     id: 12,
                     type: 'github',
-                    title: 'run-llama/ragstack',
-                    url: 'https://github.com/run-llama/ragstack',
-                    date: '2024',
-                    authors: 'LlamaIndex',
-                    desc: 'LlamaIndex 推出的企业级 RAG 解决方案，包含完整的数据摄取、检索、生成流程。',
-                    tags: ['RAG', 'Enterprise', 'LlamaIndex']
-                },
-                {
-                    id: 13,
-                    type: 'github',
                     title: 'langchain-ai/langchain',
                     url: 'https://github.com/langchain-ai/langchain',
                     date: '2023',
                     authors: 'LangChain',
-                    desc: '最流行的 LLM 应用开发框架，提供丰富的 RAG、Agent、Memory 组件。',
+                    desc: '最流行的 LLM 应用开发框架，提供 RAG、Agent、Memory 等丰富组件。',
                     tags: ['Framework', 'Agent', 'RAG']
                 }
             ],
@@ -314,129 +410,169 @@
                     url: 'https://www.pinecone.io/blog/retrieval-augmented-generation/',
                     date: '2024',
                     authors: 'Pinecone',
-                    desc: 'RAG 全面指南，从基础概念到生产部署，涵盖向量数据库选择、检索策略优化等。',
+                    desc: 'RAG 全面指南，从基础概念到生产部署，涵盖向量数据库选择、检索策略优化。',
                     tags: ['RAG', 'Tutorial', 'Pinecone']
-                },
-                {
-                    id: 22,
-                    type: 'blog',
-                    title: 'Long Context LLMs vs RAG',
-                    url: 'https://www.langchain.com/blog/long-context-vs-rag/',
-                    date: '2024',
-                    authors: 'LangChain',
-                    desc: '对比长上下文 LLM 与 RAG 的优缺点，分析不同场景下的最佳选择策略。',
-                    tags: ['RAG', 'Long Context', 'Comparison']
                 }
             ]
         };
 
-        let currentFilter = 'all';
-        let currentSearch = '';
+        // ============ Storage ============
+        function getStorage() {
+            const saved = localStorage.getItem('researchDB');
+            return saved ? JSON.parse(saved) : { liked: {}, starred: {}, comments: {} };
+        }
 
-        // 模糊搜索函数
+        function saveStorage(data) {
+            localStorage.setItem('researchDB', JSON.stringify(data));
+        }
+
+        // ============ Fuzzy Search ============
         function fuzzyMatch(text, searchTerm) {
             if (!searchTerm || !text) return false;
-            
-            const normalize = (str) => str.toLowerCase()
-                .replace(/[^\w\s]/g, '')  // 移除特殊字符
-                .replace(/\s+/g, ' ')     // 合并空格
-                .trim();
-            
+            const normalize = (str) => str.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
             const normText = normalize(text);
             const normSearch = normalize(searchTerm);
             
-            // 1. 完全匹配
             if (normText.includes(normSearch)) return true;
             
-            // 2. 分词匹配 - 搜索词分成多个词，任一匹配即可
             const searchWords = normSearch.split(' ').filter(w => w.length > 0);
             const textWords = normText.split(' ');
             
-            // 3. 单词模糊匹配
             for (const sw of searchWords) {
-                // 至少匹配一个搜索词
-                if (textWords.some(tw => tw.includes(sw) || sw.includes(tw))) {
-                    return true;
-                }
-                // 或者匹配首字母
-                if (sw.length > 2 && textWords.some(tw => tw.startsWith(sw))) {
-                    return true;
-                }
+                if (textWords.some(tw => tw.includes(sw) || sw.includes(tw))) return true;
+                if (sw.length > 2 && textWords.some(tw => tw.startsWith(sw))) return true;
             }
-            
             return false;
         }
 
-        function render() {
-            const searchTerm = currentSearch.toLowerCase();
-            
-            const filterFn = (item) => {
-                const matchesFilter = currentFilter === 'all' || 
-                    (currentFilter === 'paper' && item.type === 'paper') ||
-                    (currentFilter === 'github' && item.type === 'github') ||
-                    (currentFilter === 'blog' && item.type === 'blog') ||
-                    (currentFilter === 'rag' && item.tags.some(t => t.toLowerCase().includes('rag'))) ||
-                    (currentFilter === 'memory' && item.tags.some(t => t.toLowerCase().includes('memory') || t.toLowerCase().includes('context')));
-                
-                // 模糊搜索
-                let matchesSearch = !searchTerm;
-                if (searchTerm) {
-                    const searchFields = [
-                        item.title,
-                        item.desc,
-                        ...item.tags,
-                        item.authors
-                    ];
-                    matchesSearch = searchFields.some(field => fuzzyMatch(field, searchTerm));
-                }
-                
-                return matchesFilter && matchesSearch;
-            };
-            
-            const filteredPapers = data.papers.filter(filterFn);
-            const filteredGithub = data.github.filter(filterFn);
-            const filteredBlogs = data.blogs.filter(filterFn);
-            
-            document.getElementById('stats').textContent = 
-                `论文 ${filteredPapers.length} | GitHub ${filteredGithub.length} | 博客 ${filteredBlogs.length}`;
-            
-            renderSection('papers', filteredPapers);
-            renderSection('githubs', filteredGithub);
-            renderSection('blogs', filteredBlogs);
+        function matchesSearch(item, searchTerm) {
+            if (!searchTerm) return true;
+            const fields = [item.title, item.desc, ...item.tags, item.authors];
+            return fields.some(field => fuzzyMatch(field, searchTerm));
         }
 
-        function renderSection(id, items) {
-            const el = document.getElementById(id);
-            if (items.length === 0) {
-                el.innerHTML = '<p style="color:#86868b;padding:20px;">暂无内容</p>';
-                return;
-            }
+        // ============ Render ============
+        function render() {
+            const storage = getStorage();
+            const searchTerm = document.getElementById('search').value;
+            const activeTag = document.querySelector('.tag-btn.active').dataset.tag;
             
-            el.innerHTML = items.map(p => `
-                <div class="paper-card">
-                    <span class="paper-type type-${p.type}">${p.type === 'paper' ? '📄 论文' : p.type === 'github' ? '🐙 GitHub' : '📝 博客'}</span>
-                    <h3 class="paper-title"><a href="${p.url}" target="_blank">${p.title}</a></h3>
-                    <div class="paper-meta">${p.date} • ${p.authors}</div>
-                    <div class="paper-desc">${p.desc}</div>
-                    <div class="paper-tags">
-                        ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            const allItems = [...data.papers, ...data.github, ...data.blogs];
+            
+            const filtered = allItems.filter(item => {
+                const matchesTag = activeTag === 'all' || 
+                    (activeTag === 'paper' && item.type === 'paper') ||
+                    (activeTag === 'github' && item.type === 'github') ||
+                    (activeTag === 'blog' && item.type === 'blog') ||
+                    (activeTag === 'rag' && item.tags.some(t => t.toLowerCase().includes('rag'))) ||
+                    (activeTag === 'memory' && item.tags.some(t => t.toLowerCase().includes('memory') || t.toLowerCase().includes('context')));
+                
+                return matchesTag && matchesSearch(item, searchTerm);
+            });
+            
+            // Stats
+            const stats = {
+                papers: data.papers.length,
+                github: data.github.length,
+                blogs: data.blogs.length,
+                liked: Object.values(storage.liked).filter(Boolean).length,
+                starred: Object.values(storage.starred).filter(Boolean).length
+            };
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-item"><div class="stat-num">${stats.papers}</div><div class="stat-label">论文</div></div>
+                <div class="stat-item"><div class="stat-num">${stats.github}</div><div class="stat-label">开源</div></div>
+                <div class="stat-item"><div class="stat-num">${stats.blogs}</div><div class="stat-label">博客</div></div>
+                <div class="stat-item"><div class="stat-num">${stats.liked}</div><div class="stat-label">点赞</div></div>
+                <div class="stat-item"><div class="stat-num">${stats.starred}</div><div class="stat-label">收藏</div></div>
+            `;
+            
+            // Content
+            document.getElementById('content').innerHTML = filtered.map(item => `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon ${'icon-' + item.type}">${item.type === 'paper' ? '📄' : item.type === 'github' ? '🐙' : '📝'}</div>
+                        <div class="card-main">
+                            <h3 class="card-title"><a href="${item.url}" target="_blank">${item.title}</a></h3>
+                            <div class="card-meta">${item.date} • ${item.authors}</div>
+                            <div class="card-desc">${item.desc}</div>
+                            <div class="card-tags">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn ${storage.liked[item.id] ? 'liked' : ''}" onclick="toggleLike(${item.id})">
+                            ${storage.liked[item.id] ? '❤️' : '🤍'} 点赞
+                        </button>
+                        <button class="action-btn ${storage.starred[item.id] ? 'starred' : ''}" onclick="toggleStar(${item.id})">
+                            ${storage.starred[item.id] ? '⭐' : '☆'} 收藏
+                        </button>
+                        <button class="action-btn" onclick="toggleComment(${item.id})">💬 评论</button>
+                    </div>
+                    <div class="comment-section" id="comment-${item.id}">
+                        <textarea class="comment-input" id="input-${item.id}" placeholder="添加评论..."></textarea>
+                        <button class="comment-submit" onclick="addComment(${item.id})">发布评论</button>
+                        <div class="comments-list" id="comments-list-${item.id}">
+                            ${(storage.comments[item.id] || []).map(c => `
+                                <div class="comment-item">${c.text}
+                                    <div class="comment-date">${c.date}</div>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function filter(type) {
-            currentFilter = type;
-            document.querySelectorAll('.filter-tag').forEach((t, i) => {
-                const types = ['all', 'paper', 'github', 'blog', 'rag', 'memory'];
-                t.classList.toggle('active', types[i] === type);
-            });
+        // ============ Actions ============
+        function toggleLike(id) {
+            const storage = getStorage();
+            storage.liked[id] = !storage.liked[id];
+            saveStorage(storage);
             render();
         }
 
-        document.getElementById('search').addEventListener('input', (e) => {
-            currentSearch = e.target.value;
+        function toggleStar(id) {
+            const storage = getStorage();
+            storage.starred[id] = !storage.starred[id];
+            saveStorage(storage);
             render();
+        }
+
+        function toggleComment(id) {
+            const el = document.getElementById(`comment-${id}`);
+            el.classList.toggle('show');
+        }
+
+        function addComment(id) {
+            const input = document.getElementById(`input-${id}`);
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const storage = getStorage();
+            if (!storage.comments[id]) storage.comments[id] = [];
+            
+            storage.comments[id].push({
+                text: text,
+                date: new Date().toLocaleDateString('zh-CN')
+            });
+            
+            saveStorage(storage);
+            render();
+            
+            // Re-show comment section
+            setTimeout(() => {
+                document.getElementById(`comment-${id}`).classList.add('show');
+            }, 50);
+        }
+
+        // ============ Event Listeners ============
+        document.getElementById('search').addEventListener('input', render);
+        
+        document.querySelectorAll('.tag-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                render();
+            });
         });
         
         render();
