@@ -333,6 +333,40 @@
         let currentFilter = 'all';
         let currentSearch = '';
 
+        // 模糊搜索函数
+        function fuzzyMatch(text, searchTerm) {
+            if (!searchTerm || !text) return false;
+            
+            const normalize = (str) => str.toLowerCase()
+                .replace(/[^\w\s]/g, '')  // 移除特殊字符
+                .replace(/\s+/g, ' ')     // 合并空格
+                .trim();
+            
+            const normText = normalize(text);
+            const normSearch = normalize(searchTerm);
+            
+            // 1. 完全匹配
+            if (normText.includes(normSearch)) return true;
+            
+            // 2. 分词匹配 - 搜索词分成多个词，任一匹配即可
+            const searchWords = normSearch.split(' ').filter(w => w.length > 0);
+            const textWords = normText.split(' ');
+            
+            // 3. 单词模糊匹配
+            for (const sw of searchWords) {
+                // 至少匹配一个搜索词
+                if (textWords.some(tw => tw.includes(sw) || sw.includes(tw))) {
+                    return true;
+                }
+                // 或者匹配首字母
+                if (sw.length > 2 && textWords.some(tw => tw.startsWith(sw))) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
         function render() {
             const searchTerm = currentSearch.toLowerCase();
             
@@ -344,10 +378,17 @@
                     (currentFilter === 'rag' && item.tags.some(t => t.toLowerCase().includes('rag'))) ||
                     (currentFilter === 'memory' && item.tags.some(t => t.toLowerCase().includes('memory') || t.toLowerCase().includes('context')));
                 
-                const matchesSearch = !searchTerm || 
-                    item.title.toLowerCase().includes(searchTerm) ||
-                    item.tags.some(t => t.toLowerCase().includes(searchTerm)) ||
-                    item.desc.toLowerCase().includes(searchTerm);
+                // 模糊搜索
+                let matchesSearch = !searchTerm;
+                if (searchTerm) {
+                    const searchFields = [
+                        item.title,
+                        item.desc,
+                        ...item.tags,
+                        item.authors
+                    ];
+                    matchesSearch = searchFields.some(field => fuzzyMatch(field, searchTerm));
+                }
                 
                 return matchesFilter && matchesSearch;
             };
